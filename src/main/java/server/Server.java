@@ -2,6 +2,8 @@ package server;
 
 import com.github.jknack.handlebars.Handlebars;
 import com.github.jknack.handlebars.Template;
+import middlewares.AuthMiddleware;
+import server.handlers.AppHandlers;
 import utils.Initializer;
 import utils.JavalinRenderer;
 import utils.PrettyProperties;
@@ -26,6 +28,10 @@ public class Server {
       Integer port = Integer.parseInt(PrettyProperties.getInstance().propertyFromName("server_port"));
       app = Javalin.create(config()).start(port);
 
+      //Orden: primero Middleware, luego manejadores (Handler) y por ultimo Router
+      AuthMiddleware.apply(app);
+      //Los handlers se inicializan antes de inicializar el router
+      AppHandlers.applyHandlers(app);
       Router.init(app);
       if (Boolean.parseBoolean(PrettyProperties.getInstance().propertyFromName("dev_mode"))) {
         //INICIALIZAR DATOS DE PRUEBA

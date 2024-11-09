@@ -1,8 +1,11 @@
 package controllers;
 
+import exceptions.AccessDeniedException;
+import exceptions.UsuarioNoAutenticadoException;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import models.entities.Producto;
+import models.entities.TipoRol;
 import models.repositories.RepositorioDeProductos;
 import utils.ICrudViewsHandler;
 
@@ -21,6 +24,21 @@ public class ProductosController implements ICrudViewsHandler {
 
   @Override
   public void index(Context context) {
+    //Al tener un middleware para esto, esto ya no iria
+    /*
+    String idUsuario = context.sessionAttribute("idUsuario");
+
+    if(idUsuario == null){
+      throw new UsuarioNoAutenticadoException();
+    }
+
+    TipoRol rol = TipoRol.valueOf(context.sessionAttribute("rolUsuario"));
+
+    if(!rol.equals((TipoRol.SELLER))){
+      throw new AccessDeniedException();
+    }
+     */
+
     //Pretende devolver una vista que contenga todos los recursos almacenados en mi sistema (en este caso productos)
     List<Producto> productos = this.repositorioDeProductos.buscarTodos();
 
